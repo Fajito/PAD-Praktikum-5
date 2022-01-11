@@ -1,104 +1,105 @@
-#include <ctime>
 #include <iostream>
-#include <vector>
+#include <ctime>
 #include <time.h>
 
 
-class dynamic_array
+using namespace std;
+
+/*
+void swap_(int* arr[], int a, int b) //*a und *b ist jeweils der index fuer die
 {
-private:
-    int index = 1;
-    int* arr;
-    
-public:
-    dynamic_array(){
-        std::cout << "Welche Groesse soll der dynamische Array haben? " << std::endl;
-        std::cin >> index;
-        index += 1;
-        arr = new int [index];
-        arr[0] = -1;
-    };
+    *arr[a] = *arr[a] + *arr[b] ;
+    *arr[b] = *arr[a] - *arr[b];
+    *arr[a] = *arr[a] - *arr[b];
+}
+*/
 
-    ~dynamic_array(){
-        delete [] arr;
+void heapify(int arr[], int n, int i)
+{
+    int largest = i; // Initialize largest as root
+    int l = 2 * i + 1; // left = 2*i + 1
+    int r = 2 * i + 2; // right = 2*i + 2
+
+    // If left child is larger than root
+    if (l < n && arr[l] > arr[largest])
+        largest = l;
+
+    // If right child is larger than largest so far
+    if (r < n && arr[r] > arr[largest])
+        largest = r;
+
+    // If largest is not root
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+
+        // Recursively heapify the affected sub-tree
+        heapify(arr, n, largest);
     }
-
-    void add_elements(){
-        std::cout << "Array wird mit random Werten gefuellt (%10)" << std::endl;
-
-        srand(time(NULL)); 
-        
-        for (int i = 1; i < index ; i++){
-            arr[i] = rand()%10;
-        }
-    };
-
-    void print(){
-        if(index == 1)
-            return;
-
-        for(int i = 1; i < index; i++){
-            std::cout << "index: " << i << "; VALUE: " << arr[i] << std::endl;
-        }
-    };
-
-    int get_value(int index){
-        return arr[index];
-    }
-};
-
-class heap_sort{
-private:
-
-public:
-    void build_heap(){
-
-    };
-    void heapify(dynamic_array arr, int ind){
-
-    };
-    void swap(dynamic_array arr, int root, int max){
-        
-        int tmp = arr.get_value[root];
-
-    }
-
-};
-
-
-int main(){
-
-    char input = '1';
-
-    while (input != '!'){
-        dynamic_array arr;
-        arr.add_elements();
-        arr.print();
-
-        
-        //sorting algoritarrm
-        time_t vorher = time(NULL);
-
-     
-        time_t nachher = time(NULL);
-
-        std::cout<< "Dauer: " << nachher-vorher << " sec"<< std::endl;
-
-       
-        arr.print(); 
-       
-        arr.~dynamic_array();
-
-
-
-        std::cout << "weiterer durchgang? '0' bricht das programm ab" << std::endl;
-        std::cin >> input;
-
-
-    }
-    
 }
 
 
+void build_heap(int arr[], int n) {
+    //Build heap(rearrange array)
+    for (int i = n / 2 - 1; i >= 0; i--)
+        heapify(arr, n, i);
+
+    time_t vorher = time(NULL);
+    // One by one extract an element from heap
+    for (int i = n - 1; i >= 0; i--) {
+        // Move current root to end
+        swap(arr[0], arr[i]);
+
+        // call max heapify on the reduced heap
+        heapify(arr, i, 0);
+    }
+    time_t nachher = time(NULL);
+
+    cout << "Dauer: " << nachher - vorher << "sec" << endl;
+    cout << endl << endl;
+}
 
 
+class Dynamic_Array {
+private:
+    int* arr = 0;
+
+public:
+    Dynamic_Array() {
+        srand(time(NULL));
+
+        cout << "Anzahl an Zahlen im Array: ";
+        int input;
+        cin >> input;
+
+        int* arr = new int[input];
+
+        //cout << endl << endl << "Array wird mit " << input << " Zahlen gefuellt" << endl << endl;
+
+        for (int i = 1; i < input; i++) {
+            arr[i] = rand();
+            //cout << arr[i] << " , ";
+        }
+
+        cout << endl << endl;    
+
+        int n = input;
+
+        //sort kommt hier rein
+        build_heap(arr, n);
+
+        for (int i = 1; i < input; ++i)
+            cout << arr[i] << " ";
+        cout << "\n";
+    };
+
+    ~Dynamic_Array() {
+        delete[] arr;
+        cout << "\narray wurde geloescht" << endl << endl;
+    };
+};
+
+
+int main() {
+    Dynamic_Array arr;
+    
+}
